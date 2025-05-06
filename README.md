@@ -16,7 +16,7 @@ The `stock-widgets` Docker image provides a streamlined way to serve Nifty 50 st
 ✅ **Optimized Performance** – Fast load times & seamless updates.
 
 ### **Screenshot**
-![image](https://github.com/user-attachments/assets/cb652963-721f-4028-a25a-d28e4732966e)
+![image](https://github.com/user-attachments/assets/f2d6a4b3-521b-4840-b821-ba3de90242f2)
 
 ### **How to Use**
 1. **Pull the Docker Image**  
