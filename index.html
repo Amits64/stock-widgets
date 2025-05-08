@@ -20,7 +20,7 @@
       color:#212529;
       padding:20px;
     }
-    .container { max-width:2000px; margin:0 auto; }
+    .container { max-width:2500px; margin:0 auto; }
 
     /* Title + Search */
     header {
@@ -82,7 +82,7 @@
     .widget-content {
       flex:1; /* fill vertical space */
       position:relative;
-      display:flex; align-items:center; justify-content:center;
+      display:flex; flex-direction:column;
     }
     .widget-content > .tradingview-widget-container {
       width:100%; height:100%;
@@ -92,19 +92,48 @@
       border:4px solid rgba(0,0,0,0.1); border-radius:50%;
       border-top:4px solid var(--primary-color); width:40px; height:40px;
       animation:spin 1s linear infinite;
+      align-self: center;
+      margin: auto;
     }
     @keyframes spin { to{ transform:rotate(360deg); } }
 
     /* Ticker‑Tape full‑width under header */
     .ticker-container { grid-column:1 / -1; padding:0 !important; margin:10px 0; }
 
-    /* Chart spans 4 columns, heatmap in 5th */
+    /* Chart spans 4 columns */
     #tradingviewWidget { grid-column:1 / span 4; height: 600px;}
-    #heatmapWidget { /* sits in column 5 */ }
+    
+    /* Other widgets container */
+    #otherWidgetsContainer { 
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .other-widget-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: var(--border-radius);
+      color: #212529;
+      text-decoration: none;
+      border: 1px solid #e9ecef;
+      transition: var(--transition);
+    }
+    
+    .other-widget-link:hover {
+      background: #f8f9fa;
+      border-color: #ced4da;
+    }
+    
+    .other-widget-link i {
+      color: var(--primary-color);
+    }
 
     @media(max-width:1200px){
       .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); }
-      #tradingviewWidget, #heatmapWidget { grid-column:auto; }
+      #tradingviewWidget { grid-column:auto; }
     }
   </style>
 </head>
@@ -220,7 +249,7 @@
         { "proName": "BSE:DIVISLAB", "description": "DIVISLAB" },
         { "proName": "BSE:GRASIM", "description": "GRASIM" },
         { "proName": "BSE:HDFCLIFE", "description": "HDFCLIFE" },
-        { "proName": "BSE:BAJAJ-AUTO", "description": "BAJAJ-AUTO" },
+        { "proName": "BSE:BAJAJ_AUTO", "description": "BAJAJ_AUTO" },
         { "proName": "BSE:EICHERMOT", "description": "EICHERMOT" },
         { "proName": "BSE:HINDALCO", "description": "HINDALCO" },
         { "proName": "BSE:TATACONSUM", "description": "TATACONSUM" },
@@ -311,24 +340,56 @@
         </div>
       </div>
 
-    <!-- Row 2: Chart + Heatmap link -->
-    <div class="widget-container" id="tradingviewWidget">
-      <div class="widget-content" id="tradingviewWidgetContainer">
-        <div class="loading-spinner"></div>
+      <!-- Row 2: Chart + Other Widgets -->
+      <div class="widget-container" id="tradingviewWidget">
+        <div class="widget-content" id="tradingviewWidgetContainer">
+          <div class="loading-spinner"></div>
+        </div>
       </div>
-    </div>
 
-    <div class="widget-container" id="heatmapWidget">
-      <div class="widget-header">
-        <div class="widget-title"><i class="fas fa-th-large"></i> Sector Heatmap</div>
-      </div>
-      <div class="widget-content" style="justify-content:center; align-items:center;">
-        <a href="heatmap.html" target="_blank" 
-          style="padding:10px 20px; background:var(--primary-color); color:#fff; border-radius:4px; text-decoration:none;">
-          View Full Heatmap
-        </a>
+      <div class="widget-container" id="otherWidgets">
+        <div class="widget-header">
+          <div class="widget-title"><i class="fas fa-th-large"></i> Other Widgets</div>
+        </div>
+        <div class="widget-content" id="otherWidgetsContainer">
+          <a href="heatmap.html" target="_blank" class="other-widget-link">
+            <i class="fas fa-th-large"></i>
+            <span>Sector Heatmap</span>
+          </a>
+          
+          <a href="fundamentals.html" target="_blank" class="other-widget-link">
+            <i class="fas fa-chart-line"></i>
+            <span>Fundamental Analysis</span>
+          </a>
+          
+          <a href="news.html" target="_blank" class="other-widget-link">
+            <i class="fas fa-newspaper"></i>
+            <span>Market News</span>
+          </a>
+          
+          <a href="screener.html" target="_blank" class="other-widget-link">
+            <i class="fas fa-filter"></i>
+            <span>Stock Screener</span>
+          </a>
+          
+          <a href="watchlist.html" target="_blank" class="other-widget-link">
+            <i class="fas fa-eye"></i>
+            <span>My Watchlist</span>
+          </a>
+          
+          <a href="portfolio.html" target="_blank" class="other-widget-link">
+            <i class="fas fa-briefcase"></i>
+            <span>Portfolio Tracker</span>
+          </a>
+          
+          <a href="alerts.html" target="_blank" class="other-widget-link">
+            <i class="fas fa-bell"></i>
+            <span>Price Alerts</span>
+          </a>
+        </div>
       </div>
     </div>
+  </div>
 
   <script>
     // Footer has been removed
