@@ -5,7 +5,7 @@ FROM nginx:latest
 WORKDIR /usr/share/nginx/html
 
 # Copy your HTML files to the Nginx default root directory
-COPY index.html /usr/share/nginx/html/
+COPY *.html /usr/share/nginx/html/
 
 # Copy custom Nginx configuration (optional)
 COPY nginx.conf /etc/nginx/sites-enabled/default
