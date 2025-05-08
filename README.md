@@ -1,3 +1,5 @@
+[![CI Workflow](https://github.com/Amits64/stock-widgets/actions/workflows/workflow.yml/badge.svg)](https://github.com/Amits64/stock-widgets/actions/workflows/workflow.yml)
+
 ## **Stock Widgets – Docker Image**
 **Repository:** `amits64/stock-widgets`  
 **Description:** Stock market dashboard using Nginx to serve analytics for Nifty 50 with dynamic updates & integrations.
