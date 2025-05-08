@@ -1,7 +1,3 @@
-Here’s a complete **Repository Overview** for your Docker Hub page:
-
----
-
 ## **Stock Widgets – Docker Image**
 **Repository:** `amits64/stock-widgets`  
 **Description:** Stock market dashboard using Nginx to serve analytics for Nifty 50 with dynamic updates & integrations.
@@ -16,7 +12,8 @@ The `stock-widgets` Docker image provides a streamlined way to serve Nifty 50 st
 ✅ **Optimized Performance** – Fast load times & seamless updates.
 
 ### **Screenshot**
-![image](https://github.com/user-attachments/assets/f2d6a4b3-521b-4840-b821-ba3de90242f2)
+![image](https://github.com/user-attachments/assets/ab74f603-d3ef-4194-8a7b-9bdd061d78bd)
+![image](https://github.com/user-attachments/assets/0da3f196-e072-476e-bf99-949de0c6b7c5)
 
 ### **How to Use**
 1. **Pull the Docker Image**  
