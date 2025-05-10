@@ -21,36 +21,53 @@
       padding:20px;
     }
     .container { max-width:2500px; margin:0 auto; }
-
+  
     /* Title + Search */
     header {
       display:flex; justify-content:space-between; align-items:center;
       flex-wrap:wrap; gap:20px; margin-bottom:10px;
     }
-    footer {
-      text-align: center;
-      font-size: 14px;
-      margin-top: 40px;
-      color: #6c757d;
-    }
     .logo { display:flex; align-items:center; gap:10px; }
     .logo i { color:var(--primary-color); font-size:28px; }
     h1 { color:var(--primary-color); font-size:28px; font-weight:600; }
+  
     .search-container { display:flex; gap:15px; flex-wrap:wrap; }
     .search-box { position:relative; min-width:300px; }
-    .search-box i { position:absolute; left:15px; top:50%; transform:translateY(-50%); color:#6c757d; }
+    /* native search icon */
+    .search-box > i.search-icon {
+      position:absolute; left:15px; top:50%;
+      transform:translateY(-50%); color:#6c757d;
+    }
+    /* favorite star, on top of select */
+    #selectStar {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #ccc;               /* default “off” */
+      font-size: 1.2em;
+      transition: color 0.2s ease;
+    }
+    /* lit/golden */
+    #selectStar.active {
+      color: #ffd700;
+    }
+  
+    /* the select itself */
     #stockSelect {
       width:100%; padding:12px 20px 12px 45px; font-size:16px;
       border-radius:var(--border-radius); border:1px solid #ced4da;
       background:#fff; appearance:none;
     }
+  
     .quick-actions { display:flex; gap:10px; }
     .action-btn {
       padding:10px 15px; background:#fff; border:1px solid #ced4da;
       border-radius:var(--border-radius); cursor:pointer; display:flex; gap:5px;
     }
     .action-btn:hover { background:#067aee; color:#fff; }
-
+  
     /* Grid: force 5 columns */
     .dashboard-grid {
       display:grid;
@@ -59,7 +76,7 @@
       gap:20px;
       margin-top:20px;
     }
-
+  
     .widget-container {
       background:#fff; border-radius:var(--border-radius);
       box-shadow:var(--box-shadow); padding:20px;
@@ -67,7 +84,7 @@
       display:flex; flex-direction:column;
     }
     .widget-container:hover { transform:translateY(-5px); }
-
+  
     .widget-header {
       display:flex; justify-content:space-between; align-items:center;
       margin-bottom:15px; border-bottom:1px solid #e9ecef; padding-bottom:10px;
@@ -78,64 +95,38 @@
       background:none; border:none; color:#6c757d; cursor:pointer; padding:5px; border-radius:4px;
     }
     .widget-action-btn:hover { color:var(--primary-color); background:#f1f3f5; }
-
-    .widget-content {
-      flex:1; /* fill vertical space */
-      position:relative;
-      display:flex; flex-direction:column;
-    }
-    .widget-content > .tradingview-widget-container {
-      width:100%; height:100%;
-    }
-
+  
+    .widget-content { flex:1; position:relative; display:flex; flex-direction:column; }
+    .widget-content > .tradingview-widget-container { width:100%; height:100%; }
+  
     .loading-spinner {
       border:4px solid rgba(0,0,0,0.1); border-radius:50%;
       border-top:4px solid var(--primary-color); width:40px; height:40px;
-      animation:spin 1s linear infinite;
-      align-self: center;
-      margin: auto;
+      animation:spin 1s linear infinite; align-self:center; margin:auto;
     }
     @keyframes spin { to{ transform:rotate(360deg); } }
-
+  
     /* Ticker‑Tape full‑width under header */
-    .ticker-container { grid-column:1 / -1; padding:0 !important; margin:10px 0; }
-
+    .ticker-container { grid-column:1 / -1; padding:0!important; margin:10px 0; }
+  
     /* Chart spans 4 columns */
-    #tradingviewWidget { grid-column:1 / span 4; height: 600px;}
-    
+    #tradingviewWidget { grid-column:1 / span 4; height:600px; }
+  
     /* Other widgets container */
-    #otherWidgetsContainer { 
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    
+    #otherWidgetsContainer { display:flex; flex-direction:column; gap:15px; }
     .other-widget-link {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      border-radius: var(--border-radius);
-      color: #212529;
-      text-decoration: none;
-      border: 1px solid #e9ecef;
-      transition: var(--transition);
+      display:flex; align-items:center; gap:10px; padding:10px;
+      border-radius:var(--border-radius); color:#212529;
+      text-decoration:none; border:1px solid #e9ecef; transition:var(--transition);
     }
-    
-    .other-widget-link:hover {
-      background: #f8f9fa;
-      border-color: #ced4da;
-    }
-    
-    .other-widget-link i {
-      color: var(--primary-color);
-    }
-
+    .other-widget-link:hover { background:#f8f9fa; border-color:#ced4da; }
+    .other-widget-link i { color:var(--primary-color); }
+  
     @media(max-width:1200px){
       .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); }
       #tradingviewWidget { grid-column:auto; }
     }
-  </style>
+  </style>  
 </head>
 <body>
   <div class="container">
@@ -146,7 +137,7 @@
       </div>
       <div class="search-container">
         <div class="search-box">
-          <i class="fas fa-search"></i>
+          <i id="selectStar" class="fas fa-star option-star" style="visibility:hidden;"></i>
           <select id="stockSelect">
             <option value="" disabled selected>Search for a stock...</option>
             <!-- … all NIFTY 50 options … -->
@@ -202,8 +193,8 @@
           </select>
         </div>
         <div class="quick-actions">
-          <button class="action-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
-          <button class="action-btn" id="favoritesBtn"><i class="fas fa-star"></i> Favorites</button>
+          <button class="action-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i></button>
+          <button class="action-btn" id="favoritesBtn"><i class="fas fa-star"></i></button>
         </div>
       </div>
     </header>
@@ -216,55 +207,55 @@
         {
           "symbols":[
           { "proName": "BSE:RELIANCE", "description": "RELIANCE" },
-        { "proName": "BSE:TCS", "description": "TCS" },
-        { "proName": "BSE:INFY", "description": "INFY" },
-        { "proName": "BSE:HDFCBANK", "description": "HDFCBANK" },
-        { "proName": "BSE:ICICIBANK", "description": "ICICIBANK" },
-        { "proName": "BSE:HINDUNILVR", "description": "HINDUNILVR" },
-        { "proName": "BSE:ITC", "description": "ITC" },
-        { "proName": "BSE:KOTAKBANK", "description": "KOTAKBANK" },
-        { "proName": "BSE:LT", "description": "LT" },
-        { "proName": "BSE:SBIN", "description": "SBIN" },
-        { "proName": "BSE:AXISBANK", "description": "AXISBANK" },
-        { "proName": "BSE:BHARTIARTL", "description": "BHARTIARTL" },
-        { "proName": "BSE:BAJFINANCE", "description": "BAJFINANCE" },
-        { "proName": "BSE:ASIANPAINT", "description": "ASIANPAINT" },
-        { "proName": "BSE:MARUTI", "description": "MARUTI" },
-        { "proName": "BSE:ULTRACEMCO", "description": "ULTRACEMCO" },
-        { "proName": "BSE:WIPRO", "description": "WIPRO" },
-        { "proName": "BSE:NTPC", "description": "NTPC" },
-        { "proName": "BSE:HCLTECH", "description": "HCLTECH" },
-        { "proName": "BSE:TECHM", "description": "TECHM" },
-        { "proName": "BSE:TITAN", "description": "TITAN" },
-        { "proName": "BSE:ADANIENT", "description": "ADANIENT" },
-        { "proName": "BSE:ADANIPORTS", "description": "ADANIPORTS" },
-        { "proName": "BSE:POWERGRID", "description": "POWERGRID" },
-        { "proName": "BSE:COALINDIA", "description": "COALINDIA" },
-        { "proName": "BSE:BPCL", "description": "BPCL" },
-        { "proName": "BSE:ONGC", "description": "ONGC" },
-        { "proName": "BSE:JSWSTEEL", "description": "JSWSTEEL" },
-        { "proName": "BSE:DRREDDY", "description": "DRREDDY" },
-        { "proName": "BSE:BAJAJFINSV", "description": "BAJAJFINSV" },
-        { "proName": "BSE:CIPLA", "description": "CIPLA" },
-        { "proName": "BSE:DIVISLAB", "description": "DIVISLAB" },
-        { "proName": "BSE:GRASIM", "description": "GRASIM" },
-        { "proName": "BSE:HDFCLIFE", "description": "HDFCLIFE" },
-        { "proName": "BSE:BAJAJ_AUTO", "description": "BAJAJ_AUTO" },
-        { "proName": "BSE:EICHERMOT", "description": "EICHERMOT" },
-        { "proName": "BSE:HINDALCO", "description": "HINDALCO" },
-        { "proName": "BSE:TATACONSUM", "description": "TATACONSUM" },
-        { "proName": "BSE:TATAMOTORS", "description": "TATAMOTORS" },
-        { "proName": "BSE:TATASTEEL", "description": "TATASTEEL" },
-        { "proName": "BSE:INDUSINDBK", "description": "INDUSINDBK" },
-        { "proName": "BSE:BRITANNIA", "description": "BRITANNIA" },
-        { "proName": "BSE:HEROMOTOCO", "description": "HEROMOTOCO" },
-        { "proName": "BSE:SBILIFE", "description": "SBILIFE" },
-        { "proName": "BSE:APOLLOHOSP", "description": "APOLLOHOSP" },
-        { "proName": "BSE:ICICIPRULI", "description": "ICICIPRULI" },
-        { "proName": "BSE:NESTLEIND", "description": "NESTLEIND" },
-        { "proName": "BSE:UPL", "description": "UPL" },
-        { "proName": "BSE:SHREECEM", "description": "SHREECEM" },
-        { "proName": "BSE:M&M", "description": "M&M" }
+          { "proName": "BSE:TCS", "description": "TCS" },
+          { "proName": "BSE:INFY", "description": "INFY" },
+          { "proName": "BSE:HDFCBANK", "description": "HDFCBANK" },
+          { "proName": "BSE:ICICIBANK", "description": "ICICIBANK" },
+          { "proName": "BSE:HINDUNILVR", "description": "HINDUNILVR" },
+          { "proName": "BSE:ITC", "description": "ITC" },
+          { "proName": "BSE:KOTAKBANK", "description": "KOTAKBANK" },
+          { "proName": "BSE:LT", "description": "LT" },
+          { "proName": "BSE:SBIN", "description": "SBIN" },
+          { "proName": "BSE:AXISBANK", "description": "AXISBANK" },
+          { "proName": "BSE:BHARTIARTL", "description": "BHARTIARTL" },
+          { "proName": "BSE:BAJFINANCE", "description": "BAJFINANCE" },
+          { "proName": "BSE:ASIANPAINT", "description": "ASIANPAINT" },
+          { "proName": "BSE:MARUTI", "description": "MARUTI" },
+          { "proName": "BSE:ULTRACEMCO", "description": "ULTRACEMCO" },
+          { "proName": "BSE:WIPRO", "description": "WIPRO" },
+          { "proName": "BSE:NTPC", "description": "NTPC" },
+          { "proName": "BSE:HCLTECH", "description": "HCLTECH" },
+          { "proName": "BSE:TECHM", "description": "TECHM" },
+          { "proName": "BSE:TITAN", "description": "TITAN" },
+          { "proName": "BSE:ADANIENT", "description": "ADANIENT" },
+          { "proName": "BSE:ADANIPORTS", "description": "ADANIPORTS" },
+          { "proName": "BSE:POWERGRID", "description": "POWERGRID" },
+          { "proName": "BSE:COALINDIA", "description": "COALINDIA" },
+          { "proName": "BSE:BPCL", "description": "BPCL" },
+          { "proName": "BSE:ONGC", "description": "ONGC" },
+          { "proName": "BSE:JSWSTEEL", "description": "JSWSTEEL" },
+          { "proName": "BSE:DRREDDY", "description": "DRREDDY" },
+          { "proName": "BSE:BAJAJFINSV", "description": "BAJAJFINSV" },
+          { "proName": "BSE:CIPLA", "description": "CIPLA" },
+          { "proName": "BSE:DIVISLAB", "description": "DIVISLAB" },
+          { "proName": "BSE:GRASIM", "description": "GRASIM" },
+          { "proName": "BSE:HDFCLIFE", "description": "HDFCLIFE" },
+          { "proName": "BSE:BAJAJ_AUTO", "description": "BAJAJ_AUTO" },
+          { "proName": "BSE:EICHERMOT", "description": "EICHERMOT" },
+          { "proName": "BSE:HINDALCO", "description": "HINDALCO" },
+          { "proName": "BSE:TATACONSUM", "description": "TATACONSUM" },
+          { "proName": "BSE:TATAMOTORS", "description": "TATAMOTORS" },
+          { "proName": "BSE:TATASTEEL", "description": "TATASTEEL" },
+          { "proName": "BSE:INDUSINDBK", "description": "INDUSINDBK" },
+          { "proName": "BSE:BRITANNIA", "description": "BRITANNIA" },
+          { "proName": "BSE:HEROMOTOCO", "description": "HEROMOTOCO" },
+          { "proName": "BSE:SBILIFE", "description": "SBILIFE" },
+          { "proName": "BSE:APOLLOHOSP", "description": "APOLLOHOSP" },
+          { "proName": "BSE:ICICIPRULI", "description": "ICICIPRULI" },
+          { "proName": "BSE:NESTLEIND", "description": "NESTLEIND" },
+          { "proName": "BSE:UPL", "description": "UPL" },
+          { "proName": "BSE:SHREECEM", "description": "SHREECEM" },
+          { "proName": "BSE:M&M", "description": "M&M" }
           ],
           "showSymbolLogo":true,
           "isTransparent":false,
@@ -391,44 +382,116 @@
     </div>
   </div>
 
-  <script>
-    // Footer has been removed
-    let currentWidget = null;
-    function loadAllWidgets(stockSymbol) {
-      if (!stockSymbol) return;
-      showLoading(true);
-      ['technical','qvt','checklist','swot'].forEach(type=>loadWidget(type,stockSymbol));
-      loadTradingViewWidget(stockSymbol);
+<script>
+  // cache dom
+  const select    = document.getElementById('stockSelect');
+  const starIcon  = document.getElementById('selectStar');
+  const refreshBtn  = document.getElementById('refreshBtn');
+  const favoritesBtn = document.getElementById('favoritesBtn');
+
+  // load favorites from localStorage
+  function getFavorites() {
+    return JSON.parse(localStorage.getItem('favorites')) || [];
+  }
+  function saveFavorites(favs) {
+    localStorage.setItem('favorites', JSON.stringify(favs));
+  }
+
+  // toggle star color based on whether current select.value is in favorites
+  function refreshStarIndicator() {
+    const favSet = new Set(getFavorites().map(f=>f.symbol));
+    if (favSet.has(select.value)) {
+      starIcon.classList.add('active');
+    } else {
+      starIcon.classList.remove('active');
     }
-    function showLoading(show){
-      document.querySelectorAll('.loading-spinner').forEach(el=>el.style.display=show?'block':'none');
+  }
+
+  function addToFavorites() {
+    const sym = select.value;
+    if (!sym) { alert('Please select a stock first!'); return; }
+    const name = select.options[select.selectedIndex].text.split('(')[0].trim();
+    const favs = getFavorites();
+    if (!favs.some(f=>f.symbol===sym)) {
+      favs.push({ symbol:sym, name:name, added:new Date().toLocaleString() });
+      saveFavorites(favs);
+      alert(`${name} added to favorites!`);
+    } else {
+      alert(`${name} is already in your favorites!`);
     }
-    function loadWidget(widgetType, stockSymbol) {
-      const map = { technical:'technicalWidgetContainer', qvt:'qvtWidgetContainer', checklist:'checklistWidgetContainer', swot:'swotWidgetContainer' };
-      const urlType = widgetType==='qvt'? 'qvt-widget': widgetType+'-widget';
-      const container = document.getElementById(map[widgetType]);
-      container.innerHTML='';
-      const bc = document.createElement('blockquote');
-      bc.className='trendlyne-widgets';
-      bc.setAttribute('data-get-url',`https://trendlyne.com/web-widget/${urlType}/Poppins/${stockSymbol}/?posCol=00A25B&primaryCol=006AFF&negCol=EB3B00&neuCol=F7941E`);
-      bc.setAttribute('data-theme','light');
-      container.appendChild(bc);
-      const s=document.createElement('script');
-      s.async=true; s.src="https://cdn-static.trendlyne.com/static/js/webwidgets/tl-widgets.js"; s.onload=()=>showLoading(false);
-      container.appendChild(s);
+    refreshStarIndicator();
+  }
+
+  // load other widgets (unchanged from yours)
+  function loadAllWidgets(stockSymbol) {
+    if (!stockSymbol) return;
+    document.querySelectorAll('.loading-spinner').forEach(el=>el.style.display='block');
+    ['technical','qvt','checklist','swot'].forEach(t=>loadWidget(t,stockSymbol));
+    loadTradingViewWidget(stockSymbol);
+  }
+  function loadWidget(widgetType, stockSymbol) {
+    const map = {
+      technical:'technicalWidgetContainer',
+      qvt:'qvtWidgetContainer',
+      checklist:'checklistWidgetContainer',
+      swot:'swotWidgetContainer'
+    };
+    const urlType = widgetType==='qvt'? 'qvt-widget': widgetType+'-widget';
+    const container = document.getElementById(map[widgetType]);
+    container.innerHTML = '';
+    const bc = document.createElement('blockquote');
+    bc.className = 'trendlyne-widgets';
+    bc.setAttribute('data-get-url',
+      `https://trendlyne.com/web-widget/${urlType}/Poppins/${stockSymbol}/?posCol=00A25B&primaryCol=006AFF&negCol=EB3B00&neuCol=F7941E`
+    );
+    bc.setAttribute('data-theme','light');
+    container.appendChild(bc);
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = "https://cdn-static.trendlyne.com/static/js/webwidgets/tl-widgets.js";
+    s.onload = ()=>document.querySelectorAll('.loading-spinner').forEach(el=>el.style.display='none');
+    container.appendChild(s);
+  }
+  function loadTradingViewWidget(stockSymbol){
+    const c = document.getElementById('tradingviewWidgetContainer');
+    c.innerHTML = '';
+    const d = document.createElement('div');
+    d.id = 'tradingviewChart';
+    d.style.width = '100%';
+    d.style.height= '100%';
+    c.appendChild(d);
+    function init(){
+      new TradingView.widget({
+        width:'100%', height:'100%',
+        symbol:stockSymbol, interval:'D', timezone:'Etc/UTC',
+        theme:'Light', style:'1', locale:'en',
+        toolbar_bg:'#f1f3f6', enable_publishing:false,
+        allow_symbol_change:true, container_id:'tradingviewChart'
+      });
     }
-    function loadTradingViewWidget(stockSymbol){
-      const c=document.getElementById('tradingviewWidgetContainer'); c.innerHTML='';
-      const d=document.createElement('div'); d.id='tradingviewChart'; d.style.width='100%'; d.style.height='100%'; c.appendChild(d);
-      function init(){ new TradingView.widget({width:'100%',height:'100%',symbol:stockSymbol,interval:'D',timezone:'Etc/UTC',theme:'Light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,allow_symbol_change:true,container_id:'tradingviewChart'}); }
-      if(typeof TradingView==='undefined'){ const s=document.createElement('script'); s.src='https://s3.tradingview.com/tv.js'; s.async=true; s.onload=init; document.head.appendChild(s); }
-      else init();
-    }
-    document.getElementById('stockSelect').addEventListener('change',e=>loadAllWidgets(e.target.value));
-    document.getElementById('refreshBtn').addEventListener('click',()=>{
-      const v=document.getElementById('stockSelect').value; if(v){ loadAllWidgets(v); }
-    });
-    window.onload=()=>{ document.getElementById('stockSelect').value='INFY'; loadAllWidgets('INFY'); };
-  </script>
+    if (typeof TradingView==='undefined') {
+      const s = document.createElement('script');
+      s.src = 'https://s3.tradingview.com/tv.js';
+      s.async = true;
+      s.onload = init;
+      document.head.appendChild(s);
+    } else init();
+  }
+
+  // event wiring
+  select.addEventListener('change', e=>{
+    loadAllWidgets(e.target.value);
+    refreshStarIndicator();
+  });
+  refreshBtn.addEventListener('click', ()=> loadAllWidgets(select.value) );
+  favoritesBtn.addEventListener('click', addToFavorites);
+
+  // initial load
+  window.addEventListener('DOMContentLoaded', ()=>{
+    select.value = 'INFY';
+    loadAllWidgets('INFY');
+    refreshStarIndicator();
+  });
+</script>
 </body>
 </html>
